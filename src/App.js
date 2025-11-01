@@ -1,29 +1,22 @@
 import { Input } from './view/Input.js';
-import { isNumber, isEmpty, isZero, isThousandUnits } from './validator.js';
 import { MissionUtils } from '@woowacourse/mission-utils';
+import PurchaseAmount from './model/PurchaseAmount.js';
 
 class App {
   async run() {
-    const money = await this.#getMoney();
+    const purchaseAmountManager = await this.#getMoney();
   }
 
   async #getMoney() {
     while (true) {
       try {
-        const parchaseAmount = await Input.askPurchaseAmount();
-        this.#validateMoney(parchaseAmount.trim());
-        return Number(parchaseAmount);
+        const input = await Input.askPurchaseAmount();
+        const purchaseAmount = new PurchaseAmount(input);
+        return purchaseAmount;
       } catch (error) {
         MissionUtils.Console.print(error.message);
       }
     }
-  }
-
-  #validateMoney(money) {
-    isEmpty(money);
-    isZero(Number(money));
-    isNumber(Number(money));
-    isThousandUnits(Number(money));
   }
 }
 
