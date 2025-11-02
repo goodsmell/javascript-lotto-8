@@ -18,6 +18,10 @@ class PurchaseAmount {
     isNumber(Number(money));
     isThousandUnits(Number(money));
   }
+
+  getCountTicket() {
+    return this.#money / 1000;
+  }
 }
 
 export default PurchaseAmount;
