@@ -1,6 +1,34 @@
+import { RANK_INFO } from '../constants/prize.js';
 class LottoResult {
-  static calculate(tickets, winningLotto) {
+  static #getLottoRank(matchCount, hasBonus) {
+    const strictRule = RANK_INFO.find(
+      (rule) => rule.matchCount === matchCount && rule.hasBonus === hasBonus,
+    );
+    if (strictRule) return strictRule.key;
+
+    const noBonusRule = RANK_INFO.find(
+      (rule) => rule.matchCount === matchCount && rule.hasBonus === false,
+    );
+    if (noBonusRule) return noBonusRule.key;
+
+    return null;
+  }
+
+  static #getAllLottosMatch(tickets, winningLotto) {
     return tickets.map((ticket) => winningLotto.getMatchResult(ticket));
   }
+
+  static countRanks(tickets, winningLotto) {
+    const matchResults = LottoResult.#getAllLottosMatch(tickets, winningLotto);
+    const rankCount = { first: 0, second: 0, third: 0, fourth: 0, fifth: 0 };
+
+    matchResults.forEach(({ matchCount, hasBonus }) => {
+      const rank = LottoResult.#getLottoRank(matchCount, hasBonus);
+      if (rank) rankCount[rank] += 1;
+    });
+
+    return rankCount;
+  }
+
 }
 export default LottoResult;

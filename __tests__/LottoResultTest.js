@@ -1,43 +1,72 @@
-import WinningLotto from '../src/model/WinningLotto.js';
-import Lotto from '../src/model/Lotto.js';
 import LottoResult from '../src/service/LottoResult.js';
 
-describe('LottoResult 클래스 테스트', () => {
-  let winningLotto;
+describe('LottoResult', () => {
+  describe('등수 집계 테스트', () => {
+    test.each([
+      [6, false, { first: 1 }, '6개 일치 → 1등'],
+      [5, true, { second: 1 }, '5개 일치 + 보너스 일치 → 2등'],
+      [5, false, { third: 1 }, '5개 일치 → 3등'],
+      [4, false, { fourth: 1 }, '4개 일치 → 4등'],
+      [3, false, { fifth: 1 }, '3개 일치 → 5등'],
+      [2, false, {}, '2개 이하 일치 → 등수 없음'],
+    ])('%s개 일치 / 보너스 %s (%s)', (matchCount, hasBonus, expected, desc) => {
+      const tickets = [{}];
+      const winningLotto = {
+        getMatchResult: jest.fn().mockReturnValue({ matchCount, hasBonus }),
+      };
 
-  beforeEach(() => {
-    winningLotto = new WinningLotto();
-    winningLotto.setNumbers([1, 2, 3, 4, 5, 6]);
-    winningLotto.setBonus(7);
+      const result = LottoResult.countRanks(tickets, winningLotto);
+
+      const base = { first: 0, second: 0, third: 0, fourth: 0, fifth: 0 };
+      const expectedStat = { ...base, ...expected };
+
+      expect(result).toEqual(expectedStat);
+    });
+
+    test('여러 장이 섞여 있어도 등수별로 누적해서 집계된다.', () => {
+      const tickets = [{}, {}, {}, {}, {}, {}];
+      const winningLotto = {
+        getMatchResult: jest
+          .fn()
+          .mockReturnValueOnce({ matchCount: 6, hasBonus: false }) // 1등
+          .mockReturnValueOnce({ matchCount: 5, hasBonus: true }) // 2등
+          .mockReturnValueOnce({ matchCount: 5, hasBonus: false }) // 3등
+          .mockReturnValueOnce({ matchCount: 4, hasBonus: false }) // 4등
+          .mockReturnValueOnce({ matchCount: 3, hasBonus: false }) // 5등
+          .mockReturnValueOnce({ matchCount: 3, hasBonus: false }), // 5등
+      };
+
+      const result = LottoResult.countRanks(tickets, winningLotto);
+
+      expect(result).toEqual({
+        first: 1,
+        second: 1,
+        third: 1,
+        fourth: 1,
+        fifth: 2,
+      });
+    });
+
+    test('등수 규칙에 없는 matchCount는 집계되지 않는다.', () => {
+      const tickets = [{}, {}, {}];
+      const winningLotto = {
+        getMatchResult: jest
+          .fn()
+          .mockReturnValueOnce({ matchCount: 2, hasBonus: false })
+          .mockReturnValueOnce({ matchCount: 0, hasBonus: false })
+          .mockReturnValueOnce({ matchCount: 1, hasBonus: true }),
+      };
+
+      const result = LottoResult.countRanks(tickets, winningLotto);
+
+      expect(result).toEqual({
+        first: 0,
+        second: 0,
+        third: 0,
+        fourth: 0,
+        fifth: 0,
+      });
+    });
   });
 
-  test('티켓 개수만큼 결과가 반환된다.', () => {
-    const tickets = [
-      new Lotto([1, 2, 3, 4, 5, 6]),
-      new Lotto([1, 2, 3, 40, 41, 42]),
-      new Lotto([10, 11, 12, 13, 14, 7]),
-    ];
-
-    const result = LottoResult.calculate(tickets, winningLotto);
-
-    expect(result).toHaveLength(3);
-  });
-
-  test('각 티켓의 당첨 결과를 올바르게 계산한다.', () => {
-    const tickets = [
-      new Lotto([1, 2, 3, 4, 5, 6]), // 6개 일치
-      new Lotto([1, 2, 3, 4, 5, 7]), // 5개 + 보너스
-      new Lotto([10, 11, 12, 13, 14, 7]), // 0개 + 보너스
-      new Lotto([1, 2, 3, 10, 11, 12]), // 3개
-    ];
-
-    const result = LottoResult.calculate(tickets, winningLotto);
-
-    expect(result).toEqual([
-      { matchCount: 6, hasBonus: false },
-      { matchCount: 5, hasBonus: true },
-      { matchCount: 0, hasBonus: true },
-      { matchCount: 3, hasBonus: false },
-    ]);
-  });
 });

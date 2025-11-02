@@ -8,7 +8,7 @@ class PurchaseAmount {
     this.#money = Number(money);
   }
 
-  getValue() {
+  getPurchaseAmount() {
     return this.#money;
   }
 

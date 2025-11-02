@@ -4,7 +4,7 @@ import PurchaseAmount from '../src/model/PurchaseAmount.js';
 describe('구입금액 테스트', () => {
   test('유효한 금액이면 인스턴스가 생성된다.', () => {
     const amount = new PurchaseAmount('5000');
-    expect(amount.getValue()).toBe(5000);
+    expect(amount.getPurchaseAmount()).toBe(5000);
   });
 
   test('구입 금액이 숫자가 아니면 예외가 발생한다.', () => {
