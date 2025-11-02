@@ -40,6 +40,16 @@ class WinningLotto {
   getBonus() {
     return this.#bonus;
   }
+
+  getMatchResult(lotto) {
+    const winningNumbers = this.#winningNumber.getNumbers();
+    const myNumbers = lotto.getNumbers();
+
+    const matchCount = myNumbers.filter((n) => winningNumbers.includes(n)).length;
+    const hasBonus = myNumbers.includes(this.#bonus);
+
+    return { matchCount, hasBonus };
+  }
 }
 
 export default WinningLotto;

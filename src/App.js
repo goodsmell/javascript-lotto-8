@@ -3,8 +3,8 @@ import { Output } from './view/Output.js';
 import { MissionUtils } from '@woowacourse/mission-utils';
 import PurchaseAmount from './model/PurchaseAmount.js';
 import LottoTicketGenerator from './service/LottoTicketGenerator.js';
-import Lotto from './model/Lotto.js';
 import WinningLotto from './model/WinningLotto.js';
+import LottoResult from './service/LottoResult.js';
 
 class App {
   async run() {
@@ -21,6 +21,8 @@ class App {
     const winningLotto = new WinningLotto();
     await this.#getWinningNumber(winningLotto);
     await this.#getBonusNumber(winningLotto);
+
+    const winningCount = LottoResult.calculate(tickets, winningLotto);
   }
 
   async #getMoney() {

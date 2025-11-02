@@ -1,6 +1,6 @@
 import WinningLotto from '../src/model/WinningLotto.js';
 import { BONUS_ERROR_MESSAGE } from '../src/constants/messages.js';
-
+import Lotto from '../src/model/Lotto.js';
 describe('WinningLotto 클래스 테스트', () => {
   let winningLotto;
 
@@ -36,5 +36,40 @@ describe('WinningLotto 클래스 테스트', () => {
   test('올바른 보너스 번호 입력 시 정상적으로 설정된다.', () => {
     winningLotto.setBonus(7);
     expect(winningLotto.getBonus()).toBe(7);
+  });
+
+  describe('당첨 번호 일치 계산', () => {
+    beforeEach(() => {
+      winningLotto.setBonus(7);
+    });
+
+    test.each([
+      {
+        name: '번호가 하나도 일치하지 않으면 matchCount는 0이고 hasBonus는 false이다.',
+        myNumbers: [11, 12, 13, 14, 15, 16],
+        expected: { matchCount: 0, hasBonus: false },
+      },
+      {
+        name: '번호가 3개 일치하면 matchCount는 3이고 hasBonus는 false이다.',
+        myNumbers: [1, 2, 3, 40, 41, 42],
+        expected: { matchCount: 3, hasBonus: false },
+      },
+      {
+        name: '보너스 번호가 포함되어 있으면 matchCount는 0이고 hasBonus는 true이다.',
+        myNumbers: [10, 11, 12, 13, 14, 7],
+        expected: { matchCount: 0, hasBonus: true },
+      },
+      {
+        name: '번호 5개 + 보너스면 matchCount는 5이고 hasBonus는 true이다.',
+        myNumbers: [1, 2, 3, 4, 5, 7],
+        expected: { matchCount: 5, hasBonus: true },
+      },
+    ])('$name', ({ myNumbers, expected }) => {
+      const myLotto = new Lotto(myNumbers);
+      const result = winningLotto.getMatchResult(myLotto);
+
+      expect(result.matchCount).toBe(expected.matchCount);
+      expect(result.hasBonus).toBe(expected.hasBonus);
+    });
   });
 });
