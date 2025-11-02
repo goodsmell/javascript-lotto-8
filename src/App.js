@@ -15,6 +15,8 @@ class App {
     tickets.forEach((ticket) => {
       Output.printIssuedLottos(ticket.getNumbers());
     });
+
+    const winningNumber = await this.#getWinningNumber();
   }
 
   async #getMoney() {
@@ -23,6 +25,17 @@ class App {
         const input = await Input.askPurchaseAmount();
         const purchaseAmount = new PurchaseAmount(input);
         return purchaseAmount;
+      } catch (error) {
+        MissionUtils.Console.print(error.message);
+      }
+    }
+  }
+
+  async #getWinningNumber() {
+    while (true) {
+      try {
+        const input = await Input.askWinnintNumber();
+        return input;
       } catch (error) {
         MissionUtils.Console.print(error.message);
       }
