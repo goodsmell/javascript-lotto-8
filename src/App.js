@@ -3,6 +3,7 @@ import { Output } from './view/Output.js';
 import { MissionUtils } from '@woowacourse/mission-utils';
 import PurchaseAmount from './model/PurchaseAmount.js';
 import LottoTicketGenerator from './service/LottoTicketGenerator.js';
+import Lotto from './model/Lotto.js';
 
 class App {
   async run() {
@@ -34,8 +35,10 @@ class App {
   async #getWinningNumber() {
     while (true) {
       try {
-        const input = await Input.askWinnintNumber();
-        return input;
+        const input = await Input.askWinningNumber();
+        const winingNumber = input.split(',').map((n) => Number(n.trim()));
+        const winningLotto = new Lotto(winingNumber);
+        return winningLotto;
       } catch (error) {
         MissionUtils.Console.print(error.message);
       }
