@@ -10,6 +10,11 @@ class App {
     const issuedTicketCount = purchaseAmount.getCountTicket();
     const tickets = LottoTicketGenerator.generateMany(issuedTicketCount);
 
+    Output.printIssueLottosCount(issuedTicketCount);
+
+    tickets.forEach((ticket) => {
+      Output.printIssuedLottos(ticket.getNumbers());
+    });
   }
 
   async #getMoney() {
