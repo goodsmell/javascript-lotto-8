@@ -4,6 +4,7 @@ import { MissionUtils } from '@woowacourse/mission-utils';
 import PurchaseAmount from './model/PurchaseAmount.js';
 import LottoTicketGenerator from './service/LottoTicketGenerator.js';
 import Lotto from './model/Lotto.js';
+import WinningLotto from './model/WinningLotto.js';
 
 class App {
   async run() {
@@ -17,7 +18,9 @@ class App {
       Output.printIssuedLottos(ticket.getNumbers());
     });
 
-    const winningNumber = await this.#getWinningNumber();
+    const winningLotto = new WinningLotto();
+    await this.#getWinningNumber(winningLotto);
+    await this.#getBonusNumber(winningLotto);
   }
 
   async #getMoney() {
@@ -32,13 +35,27 @@ class App {
     }
   }
 
-  async #getWinningNumber() {
+  async #getWinningNumber(winningLotto) {
     while (true) {
       try {
         const input = await Input.askWinningNumber();
         const winingNumber = input.split(',').map((n) => Number(n.trim()));
-        const winningLotto = new Lotto(winingNumber);
-        return winningLotto;
+        winningLotto.setNumbers(winingNumber);
+        return;
+      } catch (error) {
+        MissionUtils.Console.print(error.message);
+      }
+    }
+  }
+
+  async #getBonusNumber(winningLotto) {
+    while (true) {
+      try {
+        const input = await Input.askBonusNumber();
+        const bonus = Number(input.trim());
+        console.log(bonus);
+        winningLotto.setBonus(bonus);
+        return;
       } catch (error) {
         MissionUtils.Console.print(error.message);
       }
