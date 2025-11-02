@@ -8,4 +8,14 @@ export const Output = {
     });
   },
 
+  printResult: (stat, yields) => {
+    MissionUtils.Console.print('당첨 통계');
+    MissionUtils.Console.print('---');
+    RANK_INFO.forEach(({ key, text, prize }) => {
+      const count = stat[key] ?? 0;
+      MissionUtils.Console.print(`${text} (${prize.toLocaleString()}원) - ${count}개`);
+    });
+
+    MissionUtils.Console.print(`총 수익률은 ${yields}%입니다.`);
+  },
 };

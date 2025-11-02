@@ -24,7 +24,7 @@ class App {
       rankStat,
       purchaseAmount.getPurchaseAmount(),
     );
-
+    Output.printResult(rankStat, profitRate);
   }
 
   async #getMoney() {
