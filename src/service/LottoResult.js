@@ -30,5 +30,20 @@ class LottoResult {
     return rankCount;
   }
 
+  static calculateProfitRate(rankCount, purchaseAmount) {
+    const totalPrize = this.#calculateTotalPrize(rankCount);
+    const rate = (totalPrize / purchaseAmount) * 100;
+
+    return rate.toFixed(1);
+  }
+
+  static #calculateTotalPrize(rankCount) {
+    let total = 0;
+    RANK_INFO.forEach(({ key, prize }) => {
+      const winCount = rankCount[key] ?? 0;
+      total += winCount * prize;
+    });
+    return total;
+  }
 }
 export default LottoResult;

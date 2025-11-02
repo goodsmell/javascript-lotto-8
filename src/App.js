@@ -20,6 +20,11 @@ class App {
 
     const rankStat = LottoResult.countRanks(tickets, winningLotto);
 
+    const profitRate = LottoResult.calculateProfitRate(
+      rankStat,
+      purchaseAmount.getPurchaseAmount(),
+    );
+
   }
 
   async #getMoney() {

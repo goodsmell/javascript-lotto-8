@@ -69,4 +69,29 @@ describe('LottoResult', () => {
     });
   });
 
+  describe('calculateProfitRate()', () => {
+    test('등수별 당첨금으로 수익률을 계산한다.', () => {
+      const rankCount = {
+        first: 0,
+        second: 0,
+        third: 1, // 1,500,000
+        fourth: 1, // 50,000
+        fifth: 2, // 10,000
+      };
+      const purchaseAmount = 200_000; // 20만원
+
+      const profitRate = LottoResult.calculateProfitRate(rankCount, purchaseAmount);
+
+      expect(profitRate).toBe('780.0');
+    });
+
+    test('당첨이 없으면 0.0을 반환한다.', () => {
+      const rankCount = { first: 0, second: 0, third: 0, fourth: 0, fifth: 0 };
+      const purchaseAmount = 50_000;
+
+      const profitRate = LottoResult.calculateProfitRate(rankCount, purchaseAmount);
+
+      expect(profitRate).toBe('0.0');
+    });
+  });
 });
