@@ -1,5 +1,5 @@
 import { MONEY_ERROR_MESSAGE } from './constants/messages.js';
-
+import { LOTTO_CONFIG } from './constants/game.js';
 export const isEmpty = (money) => {
   if (!money) {
     throw new Error(MONEY_ERROR_MESSAGE.INPUT_EMPTY);
@@ -19,7 +19,7 @@ export const isZero = (money) => {
 };
 
 export const isThousandUnits = (money) => {
-  if (money % 1000 !== 0) {
+  if (money % LOTTO_CONFIG.PRICE_PER_TICKET !== 0) {
     throw new Error(MONEY_ERROR_MESSAGE.INPUT_NOT_THOUSAND_UNIT);
   }
 };

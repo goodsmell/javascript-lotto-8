@@ -1,5 +1,5 @@
 import { isNumber, isEmpty, isZero, isThousandUnits } from '../validator.js';
-
+import { LOTTO_CONFIG } from '../constants/game.js';
 class PurchaseAmount {
   #money;
 
@@ -14,13 +14,13 @@ class PurchaseAmount {
 
   #validate(money) {
     isEmpty(money);
-    isZero(Number(money));
     isNumber(Number(money));
+    isZero(Number(money));
     isThousandUnits(Number(money));
   }
 
   getCountTicket() {
-    return this.#money / 1000;
+    return this.#money / LOTTO_CONFIG.PRICE_PER_TICKET;
   }
 }
 

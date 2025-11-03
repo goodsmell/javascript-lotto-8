@@ -1,6 +1,6 @@
 import Lotto from './Lotto.js';
 import { BONUS_ERROR_MESSAGE } from '../constants/messages.js';
-
+import { LOTTO_CONFIG } from '../constants/game.js';
 class WinningLotto {
   #winningNumber;
   #bonus;
@@ -23,7 +23,7 @@ class WinningLotto {
       throw new Error(BONUS_ERROR_MESSAGE.INPUT_NOT_INTEGER);
     }
 
-    if (bonus < 1 || bonus > 45) {
+    if (bonus < LOTTO_CONFIG.MIN_NUMBER || bonus > LOTTO_CONFIG.MAX_NUMBER) {
       throw new Error(BONUS_ERROR_MESSAGE.INPUT_OUT_OF_RANGE);
     }
 

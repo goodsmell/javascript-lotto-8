@@ -2,7 +2,7 @@ import LottoTicketGenerator from './LottoTicketGenerator.js';
 import LottoResult from './LottoResult.js';
 import PurchaseAmount from '../model/PurchaseAmount.js';
 import WinningLotto from '../model/WinningLotto.js';
-
+import { INPUT_DELIMITER } from '../constants/game.js';
 const LottoGameService = {
   setPurchaseAmount(raw) {
     return new PurchaseAmount(raw);
@@ -14,7 +14,7 @@ const LottoGameService = {
   },
 
   setWinningNumbers(raw) {
-    const numbers = raw.split(',').map((n) => Number(n.trim()));
+    const numbers = raw.split(INPUT_DELIMITER).map((n) => Number(n.trim()));
     const winning = new WinningLotto();
     winning.setNumbers(numbers);
     return winning;

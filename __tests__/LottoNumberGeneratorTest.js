@@ -1,11 +1,12 @@
 import LottoTicketGenerator from '../src/service/LottoTicketGenerator.js';
 import Lotto from '../src/model/Lotto.js';
+import { LOTTO_CONFIG } from '../src/constants/game.js';
 
 describe('LottoTicketGenerator', () => {
   const ticket = LottoTicketGenerator.generateOne();
   const numbers = ticket.getNumbers();
   test('숫자 6개를 가진 로또를 생성한다..', () => {
-    expect(numbers).toHaveLength(6);
+    expect(numbers).toHaveLength(LOTTO_CONFIG.NUMBER_COUNT);
     expect(ticket).toBeInstanceOf(Lotto);
   });
 
@@ -24,8 +25,8 @@ describe('LottoTicketGenerator', () => {
       expect(ticket).toBeInstanceOf(Lotto);
 
       const numbers = ticket.getNumbers();
-      expect(numbers).toHaveLength(6);
-      expect(new Set(numbers).size).toBe(6);
+      expect(numbers).toHaveLength(LOTTO_CONFIG.NUMBER_COUNT);
+      expect(new Set(numbers).size).toBe(LOTTO_CONFIG.NUMBER_COUNT);
     });
   });
 });
