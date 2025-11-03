@@ -1,6 +1,7 @@
 import { Input } from './view/Input.js';
 import { Output } from './view/Output.js';
-import LottoGameService from './service/LottoGameService.js';
+import LottoGameManager from './service/LottoGameManager.js';
+import LottoResultCalculator from './service/LottoResultCalculator.js';
 
 class App {
   async run() {
@@ -9,10 +10,10 @@ class App {
     const winningLotto = await this.#getWinningLotto();
     await this.#setBonusNumber(winningLotto);
 
-    const { rankStat, profitRate } = LottoGameService.calculateResult({
+    const { rankStat, profitRate } = LottoResultCalculator.summarize({
       lottos,
       winningLotto,
-      purchaseAmount,
+      purchaseAmount: purchaseAmount.getPurchaseAmount(),
     });
 
     Output.printResult(rankStat, profitRate);
@@ -21,12 +22,12 @@ class App {
   async #getPurchaseAmount() {
     return this.#retry(async () => {
       const raw = await Input.askPurchaseAmount();
-      return LottoGameService.createPurchaseAmount(raw);
+      return LottoGameManager.generatePurchaseAmountModel(raw);
     });
   }
 
   #issueLottos(purchaseAmount) {
-    const lottos = LottoGameService.generateLottos(purchaseAmount);
+    const lottos = LottoGameManager.generateLottoTicketsByPurchaseAmount(purchaseAmount);
     Output.printIssuedLottos(lottos);
     return lottos;
   }
@@ -34,14 +35,14 @@ class App {
   async #getWinningLotto() {
     return this.#retry(async () => {
       const raw = await Input.askWinningNumber();
-      return LottoGameService.createWinningLotto(raw);
+      return LottoGameManager.generateWinningLotto(raw);
     });
   }
 
   async #setBonusNumber(winningLotto) {
     await this.#retry(async () => {
       const raw = await Input.askBonusNumber();
-      LottoGameService.addBonusNumber(winningLotto, raw);
+      LottoGameManager.applyBonusNumberToWinningLotto(winningLotto, raw);
     });
   }
 

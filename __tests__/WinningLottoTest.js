@@ -7,7 +7,7 @@ describe('WinningLotto 클래스 테스트', () => {
 
   beforeEach(() => {
     winningLotto = new WinningLotto();
-    winningLotto.setNumbers([1, 2, 3, 4, 5, 6]);
+    winningLotto.setWinningNumbers([1, 2, 3, 4, 5, 6]);
   });
 
   test.each([

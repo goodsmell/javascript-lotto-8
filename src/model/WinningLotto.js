@@ -6,7 +6,7 @@ class WinningLotto {
   #winningNumber;
   #bonus;
 
-  setNumbers(numbers) {
+  setWinningNumbers(numbers) {
     this.#winningNumber = new Lotto(numbers);
   }
 
@@ -16,7 +16,7 @@ class WinningLotto {
   }
 
   getWinningNumbers() {
-    return this.#winningNumber.getNumbers();
+    return [...this.#winningNumber.getNumbers()];
   }
 
   getBonus() {

@@ -2,48 +2,48 @@ import { LOTTO_CONFIG } from '../constants/game.js';
 import { MONEY_ERROR_MESSAGE } from '../constants/messages.js';
 
 class PurchaseAmount {
-  #money;
+  #amount;
 
-  constructor(money) {
-    this.#validate(money);
-    this.#money = Number(money);
+  constructor(amount) {
+    this.#validate(amount);
+    this.#amount = Number(amount);
   }
 
   getPurchaseAmount() {
-    return this.#money;
+    return this.#amount;
   }
 
-  getCountLotto() {
-    return this.#money / LOTTO_CONFIG.PRICE_PER_LOTTO;
+  getLottoCount() {
+    return this.#amount / LOTTO_CONFIG.PRICE_PER_LOTTO;
   }
 
-  #validate(money) {
-    this.#assertNotEmpty(money);
-    this.#assertIsNumber(Number(money));
-    this.#assertNotZero(Number(money));
-    this.#assertMultipleOfPrice(Number(money));
+  #validate(amount) {
+    this.#assertNotEmpty(amount);
+    this.#assertIsNumber(Number(amount));
+    this.#assertNotZero(Number(amount));
+    this.#assertMultipleOfPrice(Number(amount));
   }
 
-  #assertNotEmpty = (money) => {
-    if (!money) {
+  #assertNotEmpty = (amount) => {
+    if (!amount) {
       throw new Error(MONEY_ERROR_MESSAGE.INPUT_EMPTY);
     }
   };
 
-  #assertIsNumber = (money) => {
-    if (Number.isNaN(money)) {
+  #assertIsNumber = (amount) => {
+    if (Number.isNaN(amount)) {
       throw new Error(MONEY_ERROR_MESSAGE.INPUT_NOT_NUMBER);
     }
   };
 
-  #assertNotZero = (money) => {
-    if (money === 0) {
+  #assertNotZero = (amount) => {
+    if (amount === 0) {
       throw new Error(MONEY_ERROR_MESSAGE.INPUT_ZERO);
     }
   };
 
-  #assertMultipleOfPrice = (money) => {
-    if (money % LOTTO_CONFIG.PRICE_PER_LOTTO !== 0) {
+  #assertMultipleOfPrice = (amount) => {
+    if (amount % LOTTO_CONFIG.PRICE_PER_LOTTO !== 0) {
       throw new Error(MONEY_ERROR_MESSAGE.INPUT_NOT_THOUSAND_UNIT);
     }
   };

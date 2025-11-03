@@ -1,4 +1,4 @@
-import LottoResult from '../src/service/LottoResult.js';
+import LottoResult from '../src/service/LottoResultCalculator.js';
 
 describe('LottoResult', () => {
   describe('등수 집계 테스트', () => {
@@ -15,7 +15,7 @@ describe('LottoResult', () => {
         getMatchResult: jest.fn().mockReturnValue({ matchCount, hasBonus }),
       };
 
-      const result = LottoResult.countRanks(tickets, winningLotto);
+      const result = LottoResult.calculateWinningRankStatistics(tickets, winningLotto);
 
       const base = { first: 0, second: 0, third: 0, fourth: 0, fifth: 0 };
       const expectedStat = { ...base, ...expected };
@@ -36,7 +36,7 @@ describe('LottoResult', () => {
           .mockReturnValueOnce({ matchCount: 3, hasBonus: false }), // 5등
       };
 
-      const result = LottoResult.countRanks(tickets, winningLotto);
+      const result = LottoResult.calculateWinningRankStatistics(tickets, winningLotto);
 
       expect(result).toEqual({
         first: 1,
@@ -57,7 +57,7 @@ describe('LottoResult', () => {
           .mockReturnValueOnce({ matchCount: 1, hasBonus: true }),
       };
 
-      const result = LottoResult.countRanks(tickets, winningLotto);
+      const result = LottoResult.calculateWinningRankStatistics(tickets, winningLotto);
 
       expect(result).toEqual({
         first: 0,
