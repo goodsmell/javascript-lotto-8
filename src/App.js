@@ -1,67 +1,56 @@
 import { Input } from './view/Input.js';
 import { Output } from './view/Output.js';
-import { MissionUtils } from '@woowacourse/mission-utils';
-import PurchaseAmount from './model/PurchaseAmount.js';
-import LottoTicketGenerator from './service/LottoTicketGenerator.js';
-import WinningLotto from './model/WinningLotto.js';
-import LottoResult from './service/LottoResult.js';
+import LottoGameService from './service/LottoGameService.js';
 
 class App {
   async run() {
-    const purchaseAmount = await this.#getMoney();
-    const issuedTicketCount = purchaseAmount.getCountTicket();
-    const tickets = LottoTicketGenerator.generateMany(issuedTicketCount);
+    const purchaseAmount = await this.#getPurchaseAmount();
+    const tickets = this.#issueTickets(purchaseAmount);
+    const winning = await this.#getWinningNumbers();
+    await this.#setBonusNumber(winning);
 
-    Output.printIssuedLottos(tickets);
+    const { rankStat, profitRate } = LottoGameService.computeResult({
+      tickets,
+      winning,
+      purchaseAmount,
+    });
 
-    const winningLotto = new WinningLotto();
-    await this.#getWinningNumber(winningLotto);
-    await this.#getBonusNumber(winningLotto);
-
-    const rankStat = LottoResult.countRanks(tickets, winningLotto);
-
-    const profitRate = LottoResult.calculateProfitRate(
-      rankStat,
-      purchaseAmount.getPurchaseAmount(),
-    );
     Output.printResult(rankStat, profitRate);
   }
 
-  async #getMoney() {
-    while (true) {
-      try {
-        const input = await Input.askPurchaseAmount();
-        const purchaseAmount = new PurchaseAmount(input);
-        return purchaseAmount;
-      } catch (error) {
-        MissionUtils.Console.print(error.message);
-      }
-    }
+  async #getPurchaseAmount() {
+    return this.#retry(async () => {
+      const raw = await Input.askPurchaseAmount();
+      return LottoGameService.setPurchaseAmount(raw);
+    });
   }
 
-  async #getWinningNumber(winningLotto) {
-    while (true) {
-      try {
-        const input = await Input.askWinningNumber();
-        const winingNumber = input.split(',').map((n) => Number(n.trim()));
-        winningLotto.setNumbers(winingNumber);
-        return;
-      } catch (error) {
-        MissionUtils.Console.print(error.message);
-      }
-    }
+  #issueTickets(purchaseAmount) {
+    const tickets = LottoGameService.issueTickets(purchaseAmount);
+    Output.printIssuedLottos(tickets);
+    return tickets;
   }
 
-  async #getBonusNumber(winningLotto) {
+  async #getWinningNumbers() {
+    return this.#retry(async () => {
+      const raw = await Input.askWinningNumber();
+      return LottoGameService.setWinningNumbers(raw);
+    });
+  }
+
+  async #setBonusNumber(winning) {
+    await this.#retry(async () => {
+      const raw = await Input.askBonusNumber();
+      LottoGameService.setBonus(winning, raw);
+    });
+  }
+
+  async #retry(task) {
     while (true) {
       try {
-        const input = await Input.askBonusNumber();
-        const bonus = Number(input.trim());
-        console.log(bonus);
-        winningLotto.setBonus(bonus);
-        return;
-      } catch (error) {
-        MissionUtils.Console.print(error.message);
+        return await task();
+      } catch (e) {
+        Output.printErrorMessage(e.message);
       }
     }
   }
