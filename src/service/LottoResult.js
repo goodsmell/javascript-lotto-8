@@ -1,4 +1,5 @@
 import { RANK_INFO } from '../constants/prize.js';
+
 class LottoResult {
   static #getLottoRank(matchCount, hasBonus) {
     const strictRule = RANK_INFO.find(
@@ -34,7 +35,7 @@ class LottoResult {
     const totalPrize = this.#calculateTotalPrize(rankCount);
     const rate = (totalPrize / purchaseAmount) * 100;
 
-    return rate.toFixed(1);
+    return rate;
   }
 
   static #calculateTotalPrize(rankCount) {

@@ -82,7 +82,7 @@ describe('LottoResult', () => {
 
       const profitRate = LottoResult.calculateProfitRate(rankCount, purchaseAmount);
 
-      expect(profitRate).toBe('780.0');
+      expect(profitRate).toBe(780);
     });
 
     test('당첨이 없으면 0.0을 반환한다.', () => {
@@ -91,7 +91,7 @@ describe('LottoResult', () => {
 
       const profitRate = LottoResult.calculateProfitRate(rankCount, purchaseAmount);
 
-      expect(profitRate).toBe('0.0');
+      expect(profitRate).toBe(0);
     });
   });
 });
