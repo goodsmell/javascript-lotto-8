@@ -1,6 +1,7 @@
 import Lotto from './Lotto.js';
 import { BONUS_ERROR_MESSAGE } from '../constants/messages.js';
 import { LOTTO_CONFIG } from '../constants/game.js';
+
 class WinningLotto {
   #winningNumber;
   #bonus;
@@ -13,7 +14,25 @@ class WinningLotto {
     this.#validateBonus(bonus);
     this.#bonus = bonus;
   }
-  
+
+  getWinningNumbers() {
+    return this.#winningNumber.getNumbers();
+  }
+
+  getBonus() {
+    return this.#bonus;
+  }
+
+  getMatchResult(lotto) {
+    const winningNumbers = this.#winningNumber.getNumbers();
+    const myNumbers = lotto.getNumbers();
+
+    const matchCount = myNumbers.filter((n) => winningNumbers.includes(n)).length;
+    const hasBonus = myNumbers.includes(this.#bonus);
+
+    return { matchCount, hasBonus };
+  }
+
   #validateBonus(bonus) {
     this.#assertFiniteNumber(bonus);
     this.#assertInteger(bonus);
@@ -45,24 +64,6 @@ class WinningLotto {
     if (winningNumbers.includes(bonus)) {
       throw new Error(BONUS_ERROR_MESSAGE.INPUT_DUPLICATE);
     }
-  }
-
-  getWinningNumbers() {
-    return this.#winningNumber.getNumbers();
-  }
-
-  getBonus() {
-    return this.#bonus;
-  }
-
-  getMatchResult(lotto) {
-    const winningNumbers = this.#winningNumber.getNumbers();
-    const myNumbers = lotto.getNumbers();
-
-    const matchCount = myNumbers.filter((n) => winningNumbers.includes(n)).length;
-    const hasBonus = myNumbers.includes(this.#bonus);
-
-    return { matchCount, hasBonus };
   }
 }
 

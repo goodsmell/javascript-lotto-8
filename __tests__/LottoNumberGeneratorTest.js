@@ -3,8 +3,9 @@ import Lotto from '../src/model/Lotto.js';
 import { LOTTO_CONFIG } from '../src/constants/game.js';
 
 describe('LottoTicketGenerator', () => {
-  const ticket = LottoTicketGenerator.generateOne();
+  const ticket = LottoTicketGenerator.generateOneLotto();
   const numbers = ticket.getNumbers();
+
   test('숫자 6개를 가진 로또를 생성한다..', () => {
     expect(numbers).toHaveLength(LOTTO_CONFIG.NUMBER_COUNT);
     expect(ticket).toBeInstanceOf(Lotto);
@@ -17,7 +18,7 @@ describe('LottoTicketGenerator', () => {
 
   test('로또 여러장을 생성한다.', () => {
     const count = 5;
-    const tickets = LottoTicketGenerator.generateMany(count);
+    const tickets = LottoTicketGenerator.generateManyLottos(count);
 
     expect(tickets).toHaveLength(count);
 

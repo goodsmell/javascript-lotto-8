@@ -1,6 +1,18 @@
 import { RANK_INFO } from '../constants/prize.js';
 
 class LottoResult {
+  static countRanks(lottos, winningLotto) {
+    const matchResults = this.#getAllLottosMatch(lottos, winningLotto);
+    const rankCount = { first: 0, second: 0, third: 0, fourth: 0, fifth: 0 };
+
+    matchResults.forEach(({ matchCount, hasBonus }) => {
+      const rank = this.#getLottoRank(matchCount, hasBonus);
+      if (rank) rankCount[rank] += 1;
+    });
+
+    return rankCount;
+  }
+
   static #getLottoRank(matchCount, hasBonus) {
     const strictRule = RANK_INFO.find(
       (rule) => rule.matchCount === matchCount && rule.hasBonus === hasBonus,
@@ -15,20 +27,8 @@ class LottoResult {
     return null;
   }
 
-  static #getAllLottosMatch(tickets, winningLotto) {
-    return tickets.map((ticket) => winningLotto.getMatchResult(ticket));
-  }
-
-  static countRanks(tickets, winningLotto) {
-    const matchResults = LottoResult.#getAllLottosMatch(tickets, winningLotto);
-    const rankCount = { first: 0, second: 0, third: 0, fourth: 0, fifth: 0 };
-
-    matchResults.forEach(({ matchCount, hasBonus }) => {
-      const rank = LottoResult.#getLottoRank(matchCount, hasBonus);
-      if (rank) rankCount[rank] += 1;
-    });
-
-    return rankCount;
+  static #getAllLottosMatch(lottos, winningLotto) {
+    return lottos.map((lotto) => winningLotto.getMatchResult(lotto));
   }
 
   static calculateProfitRate(rankCount, purchaseAmount) {

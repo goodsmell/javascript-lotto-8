@@ -5,13 +5,13 @@ import LottoGameService from './service/LottoGameService.js';
 class App {
   async run() {
     const purchaseAmount = await this.#getPurchaseAmount();
-    const tickets = this.#issueTickets(purchaseAmount);
-    const winning = await this.#getWinningNumbers();
-    await this.#setBonusNumber(winning);
+    const lottos = this.#issueLottos(purchaseAmount);
+    const winningLotto = await this.#getWinningLotto();
+    await this.#setBonusNumber(winningLotto);
 
-    const { rankStat, profitRate } = LottoGameService.computeResult({
-      tickets,
-      winning,
+    const { rankStat, profitRate } = LottoGameService.calculateResult({
+      lottos,
+      winningLotto,
       purchaseAmount,
     });
 
@@ -21,27 +21,27 @@ class App {
   async #getPurchaseAmount() {
     return this.#retry(async () => {
       const raw = await Input.askPurchaseAmount();
-      return LottoGameService.setPurchaseAmount(raw);
+      return LottoGameService.createPurchaseAmount(raw);
     });
   }
 
-  #issueTickets(purchaseAmount) {
-    const tickets = LottoGameService.issueTickets(purchaseAmount);
-    Output.printIssuedLottos(tickets);
-    return tickets;
+  #issueLottos(purchaseAmount) {
+    const lottos = LottoGameService.generateLottos(purchaseAmount);
+    Output.printIssuedLottos(lottos);
+    return lottos;
   }
 
-  async #getWinningNumbers() {
+  async #getWinningLotto() {
     return this.#retry(async () => {
       const raw = await Input.askWinningNumber();
-      return LottoGameService.setWinningNumbers(raw);
+      return LottoGameService.createWinningLotto(raw);
     });
   }
 
-  async #setBonusNumber(winning) {
+  async #setBonusNumber(winningLotto) {
     await this.#retry(async () => {
       const raw = await Input.askBonusNumber();
-      LottoGameService.setBonus(winning, raw);
+      LottoGameService.addBonusNumber(winningLotto, raw);
     });
   }
 

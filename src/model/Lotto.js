@@ -9,6 +9,17 @@ class Lotto {
     this.#numbers = [...numbers].sort((a, b) => a - b);
   }
 
+  getNumbers() {
+    return [...this.#numbers];
+  }
+
+  #validate(numbers) {
+    this.#assertLength(numbers);
+    this.#assertAllFiniteIntegers(numbers);
+    this.#assertInRange(numbers);
+    this.#assertNoDuplicate(numbers);
+  }
+
   #assertAllFiniteIntegers(numbers) {
     const allFinite = numbers.every((n) => Number.isFinite(n));
     if (!allFinite) throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_NUMBER);
@@ -32,17 +43,6 @@ class Lotto {
     if (numbers.length !== LOTTO_CONFIG.NUMBER_COUNT) {
       throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_SIX_NUMBERS);
     }
-  }
-
-  #validate(numbers) {
-    this.#assertLength(numbers);
-    this.#assertAllFiniteIntegers(numbers);
-    this.#assertInRange(numbers);
-    this.#assertNoDuplicate(numbers);
-  }
-
-  getNumbers() {
-    return [...this.#numbers];
   }
 }
 export default Lotto;

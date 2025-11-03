@@ -1,6 +1,7 @@
 import WinningLotto from '../src/model/WinningLotto.js';
 import { BONUS_ERROR_MESSAGE } from '../src/constants/messages.js';
 import Lotto from '../src/model/Lotto.js';
+
 describe('WinningLotto 클래스 테스트', () => {
   let winningLotto;
 

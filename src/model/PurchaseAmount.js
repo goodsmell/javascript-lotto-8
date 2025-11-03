@@ -13,6 +13,10 @@ class PurchaseAmount {
     return this.#money;
   }
 
+  getCountLotto() {
+    return this.#money / LOTTO_CONFIG.PRICE_PER_LOTTO;
+  }
+
   #validate(money) {
     this.#assertNotEmpty(money);
     this.#assertIsNumber(Number(money));
@@ -39,14 +43,10 @@ class PurchaseAmount {
   };
 
   #assertMultipleOfPrice = (money) => {
-    if (money % LOTTO_CONFIG.PRICE_PER_TICKET !== 0) {
+    if (money % LOTTO_CONFIG.PRICE_PER_LOTTO !== 0) {
       throw new Error(MONEY_ERROR_MESSAGE.INPUT_NOT_THOUSAND_UNIT);
     }
   };
-
-  getCountTicket() {
-    return this.#money / LOTTO_CONFIG.PRICE_PER_TICKET;
-  }
 }
 
 export default PurchaseAmount;

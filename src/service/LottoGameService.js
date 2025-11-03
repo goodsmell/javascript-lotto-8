@@ -3,32 +3,33 @@ import LottoResult from './LottoResult.js';
 import PurchaseAmount from '../model/PurchaseAmount.js';
 import WinningLotto from '../model/WinningLotto.js';
 import { INPUT_DELIMITER } from '../constants/game.js';
+
 const LottoGameService = {
-  setPurchaseAmount(raw) {
+  createPurchaseAmount(raw) {
     return new PurchaseAmount(raw);
   },
 
-  issueTickets(purchaseAmount) {
-    const count = purchaseAmount.getCountTicket();
-    return LottoTicketGenerator.generateMany(count);
+  generateLottos(purchaseAmount) {
+    const count = purchaseAmount.getCountLotto();
+    return LottoTicketGenerator.generateManyLottos(count);
   },
 
-  setWinningNumbers(raw) {
+  createWinningLotto(raw) {
     const numbers = raw.split(INPUT_DELIMITER).map((n) => Number(n.trim()));
-    const winning = new WinningLotto();
-    winning.setNumbers(numbers);
-    return winning;
+    const winningLotto = new WinningLotto();
+    winningLotto.setNumbers(numbers);
+    return winningLotto;
   },
 
-  setBonus(winning, raw) {
+  addBonusNumber(winningLotto, raw) {
     const bonus = Number(raw.trim());
-    winning.setBonus(bonus);
-    return winning;
+    winningLotto.setBonus(bonus);
+    return winningLotto;
   },
 
-  computeResult(rankInputs) {
-    const { tickets, winning, purchaseAmount } = rankInputs;
-    const rankStat = LottoResult.countRanks(tickets, winning);
+  calculateResult(rankInputs) {
+    const { lottos, winningLotto, purchaseAmount } = rankInputs;
+    const rankStat = LottoResult.countRanks(lottos, winningLotto);
     const profitRate = LottoResult.calculateProfitRate(
       rankStat,
       purchaseAmount.getPurchaseAmount(),
