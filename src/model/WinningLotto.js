@@ -13,20 +13,34 @@ class WinningLotto {
     this.#validateBonus(bonus);
     this.#bonus = bonus;
   }
-
+  
   #validateBonus(bonus) {
+    this.#assertFiniteNumber(bonus);
+    this.#assertInteger(bonus);
+    this.#assertInRange(bonus);
+    this.#assertNotDuplicate(bonus);
+  }
+
+  #assertFiniteNumber(bonus) {
     if (!Number.isFinite(bonus)) {
       throw new Error(BONUS_ERROR_MESSAGE.INPUT_NOT_NUMBER);
     }
+  }
 
+  #assertInteger(bonus) {
     if (!Number.isInteger(bonus)) {
       throw new Error(BONUS_ERROR_MESSAGE.INPUT_NOT_INTEGER);
     }
+  }
 
-    if (bonus < LOTTO_CONFIG.MIN_NUMBER || bonus > LOTTO_CONFIG.MAX_NUMBER) {
+  #assertInRange(bonus) {
+    const { MIN_NUMBER, MAX_NUMBER } = LOTTO_CONFIG;
+    if (bonus < MIN_NUMBER || bonus > MAX_NUMBER) {
       throw new Error(BONUS_ERROR_MESSAGE.INPUT_OUT_OF_RANGE);
     }
+  }
 
+  #assertNotDuplicate(bonus) {
     const winningNumbers = this.#winningNumber.getNumbers();
     if (winningNumbers.includes(bonus)) {
       throw new Error(BONUS_ERROR_MESSAGE.INPUT_DUPLICATE);

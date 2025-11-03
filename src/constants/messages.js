@@ -6,7 +6,6 @@ export const MONEY_ERROR_MESSAGE = Object.freeze({
 });
 
 export const LOTTO_ERROR_MESSAGE = Object.freeze({
-  INPUT_EMPTY: '[ERROR] 당첨 번호가 입력되지 않았습니다.\n',
   INPUT_NOT_NUMBER: '[ERROR] 문자는 입력할 수 없습니다.\n',
   INPUT_NOT_INTEGER: '[ERROR] 정수만 입력할 수 있습니다.\n',
   INPUT_OUT_OF_RANGE: '[ERROR] 로또 번호는 1부터 45 사이의 숫자여야 합니다.\n',

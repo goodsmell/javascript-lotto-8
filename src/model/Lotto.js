@@ -1,5 +1,6 @@
 import { LOTTO_ERROR_MESSAGE } from '../constants/messages.js';
 import { LOTTO_CONFIG } from '../constants/game.js';
+
 class Lotto {
   #numbers;
 
@@ -8,33 +9,40 @@ class Lotto {
     this.#numbers = [...numbers].sort((a, b) => a - b);
   }
 
-  #validate(numbers) {
-    const isAllNumber = numbers.every((num) => Number.isFinite(num));
-    const isAllInt = numbers.every((num) => Number.isInteger(num));
+  #assertAllFiniteIntegers(numbers) {
+    const allFinite = numbers.every((n) => Number.isFinite(n));
+    if (!allFinite) throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_NUMBER);
 
-    if (!isAllNumber) {
-      throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_NUMBER);
-    }
+    const allInt = numbers.every((n) => Number.isInteger(n));
+    if (!allInt) throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_INTEGER);
+  }
 
-    if (!isAllInt) {
-      throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_INTEGER);
-    }
+  #assertInRange(numbers) {
+    const { MIN_NUMBER, MAX_NUMBER } = LOTTO_CONFIG;
+    const outOfRange = numbers.some((n) => n < MIN_NUMBER || n > MAX_NUMBER);
+    if (outOfRange) throw new Error(LOTTO_ERROR_MESSAGE.INPUT_OUT_OF_RANGE);
+  }
 
-    if (numbers.some((num) => num < LOTTO_CONFIG.MIN_NUMBER || num > LOTTO_CONFIG.MAX_NUMBER)) {
-      throw new Error(LOTTO_ERROR_MESSAGE.INPUT_OUT_OF_RANGE);
-    }
-
-    if (numbers.length !== LOTTO_CONFIG.NUMBER_COUNT) {
-      throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_SIX_NUMBERS);
-    }
-
+  #assertNoDuplicate(numbers) {
     if (new Set(numbers).size !== numbers.length) {
       throw new Error(LOTTO_ERROR_MESSAGE.INPUT_DUPLICATE);
     }
   }
+  #assertLength(numbers) {
+    if (numbers.length !== LOTTO_CONFIG.NUMBER_COUNT) {
+      throw new Error(LOTTO_ERROR_MESSAGE.INPUT_NOT_SIX_NUMBERS);
+    }
+  }
+
+  #validate(numbers) {
+    this.#assertLength(numbers);
+    this.#assertAllFiniteIntegers(numbers);
+    this.#assertInRange(numbers);
+    this.#assertNoDuplicate(numbers);
+  }
 
   getNumbers() {
-    return this.#numbers;
+    return [...this.#numbers];
   }
 }
 export default Lotto;
