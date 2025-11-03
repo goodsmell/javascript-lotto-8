@@ -1,6 +1,6 @@
-import LottoTicketGenerator from '../src/service/LottoTicketGenerator.js';
-import Lotto from '../src/model/Lotto.js';
-import { LOTTO_CONFIG } from '../src/constants/game.js';
+import LottoTicketGenerator from '../../src/service/LottoTicketGenerator.js';
+import Lotto from '../../src/model/Lotto.js';
+import { LOTTO_CONFIG } from '../../src/constants/game.js';
 
 describe('LottoTicketGenerator', () => {
   const ticket = LottoTicketGenerator.generateSingleLottoTicket();

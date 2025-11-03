@@ -1,5 +1,5 @@
-import Lotto from '../src/model/Lotto.js';
-import { LOTTO_ERROR_MESSAGE } from '../src/constants/messages.js';
+import Lotto from '../../src/model/Lotto.js';
+import { LOTTO_ERROR_MESSAGE } from '../../src/constants/messages.js';
 
 describe('로또 클래스 테스트', () => {
   test('로또 번호에 문자가 있으면 예외가 발생한다.', () => {
